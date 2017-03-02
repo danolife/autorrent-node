@@ -1,4 +1,3 @@
-const curl = require('curl')
 const tvShowTime = {
   'client_id': 'QiELLt4riIVJCxDhshZn',
   //'client_secret': '-UIjzexvB3nLax4pP8-2l6jAj71sCY9KHHUcqBOp'
