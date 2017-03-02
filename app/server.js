@@ -3,6 +3,7 @@ var port = 8080;
 const express = require('express')
 const app = express()
 const controller = require('./controller')
+var tvShowTimeCode;
 
 module.exports = {
   init: function() {
@@ -12,11 +13,20 @@ module.exports = {
     })
 
     app.get('/', (request, response) => {
-      response.send(controller.index(request, response))
+      response.send(controller.index())
     })
 
     app.get('/test', (request, response) => {
-      response.send(controller.test(request, response))
+      response.send(controller.test())
+    })
+
+    app.get('/auth', (request, response) => {
+      response.redirect(controller.auth())
+    })
+
+    app.get('/authback', (request, response) => {
+      tvShowTimeCode = request.query.code
+      response.redirect('/')
     })
 
     app.use((err, request, response, next) => {
