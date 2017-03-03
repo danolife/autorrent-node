@@ -1,5 +1,5 @@
 module.exports = {
   auth: {
-    redirect_uri: 'localhost:8080'
+    redirect_uri: 'http://localhost:8080/authback'
   }
 }

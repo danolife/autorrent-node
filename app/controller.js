@@ -1,7 +1,8 @@
+const config = require('../config/config')
 const tvShowTime = {
   'client_id': 'QiELLt4riIVJCxDhshZn',
   //'client_secret': '-UIjzexvB3nLax4pP8-2l6jAj71sCY9KHHUcqBOp'
-  'redirect_uri': 'http://localhost:8080/authback',
+  'redirect_uri': config.auth.redirect_uri,
   'state': 'lkjfsijdfns'
 }
 module.exports = {
