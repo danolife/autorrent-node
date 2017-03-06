@@ -30,9 +30,6 @@ module.exports = {
 
     app.get('/', (request, response) => {
       console.log('/')
-      if (token) {
-        
-      }
       response.send(controller.index())
     })
 
