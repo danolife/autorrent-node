@@ -1,2 +1,6 @@
 <h1>Welcome to Autorrent</h1>
-<a href="/auth/tvst">Log in</a>
+{{#if user}}
+  Welcome {{user.name}}
+{{else}}
+  <a href="/auth/tvst">Log in</a>
+{{/if}}

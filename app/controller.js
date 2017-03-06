@@ -4,14 +4,15 @@ const config = require('../config/config')
 module.exports = {
   index: function(response) {
     if (api.token) {
-      api.getUser(function(err, response, body) {
-        console.log(body)
+      api.getUser(function(user) {
+        return response.render('index', {
+          user: user.user
+        })
       })
     } else {
-        console.log("no token")
+      return response.render('index', {
+        user: undefined
+      })
     }
-    return response.render('index', {
-      name: 'Dany'
-    })
   },
 }
