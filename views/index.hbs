@@ -4,3 +4,9 @@
 {{else}}
   <a href="/auth/tvst">Log in</a>
 {{/if}}
+
+<ul>
+  {{#each episodes}}
+    <li>{{show.name}} S{{season_number}}E{{number}}: {{name}}</li>
+  {{/each}}
+</ul>

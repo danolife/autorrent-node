@@ -17,5 +17,15 @@ module.exports = {
       cb(module.exports.user)
       return module.exports.user
     }
+  },
+  getWatchList: function(cb) {
+    request({
+      url: 'https://api.tvshowtime.com/v1/to_watch',
+      qs: {access_token: module.exports.token}
+    }, function(err, response, body) {
+      var watchList = JSON.parse(body);
+      cb(watchList)
+      return watchList
+    })
   }
 }

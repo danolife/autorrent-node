@@ -5,8 +5,11 @@ module.exports = {
   index: function(response) {
     if (api.token) {
       api.getUser(function(user) {
-        return response.render('index', {
-          user: user.user
+        api.getWatchList(function(watchList) {
+          return response.render('index', {
+            user: user.user,
+            episodes: watchList.episodes
+          })
         })
       })
     } else {
