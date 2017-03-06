@@ -1,6 +1,8 @@
 #!/usr/bin/env nodejs
 const port = 8080;
+const path = require('path')
 const express = require('express')
+const exphbs = require('express-handlebars')
 const app = express()
 const controller = require('./controller')
 const api = require('./api')
@@ -14,6 +16,14 @@ module.exports = {
       // console.log(request.headers)
       next()
     })
+
+    app.engine('.hbs', exphbs({
+      defaultLayout: 'layout',
+      extname: '.hbs',
+      layoutsDir: path.join(__dirname, '../views/layouts')
+    }))
+    app.set('view engine', '.hbs')
+    app.set('views', path.join(__dirname, '../views'))
 
     passport.use('tvst', new OAuth2Strategy({
       authorizationURL: 'https://www.tvshowtime.com/oauth/authorize',
@@ -30,15 +40,7 @@ module.exports = {
 
     app.get('/', (req, res) => {
       console.log('/')
-      if (api.token) {
-        api.getUser(function(err, response, body) {
-          console.log(body)
-          res.send(controller.index())
-        })
-      } else {
-          console.log("no token")
-        res.send(controller.index())
-      }
+      controller.index(res)
     })
 
     // Redirect the user to the OAuth 2.0 provider for authentication.  When

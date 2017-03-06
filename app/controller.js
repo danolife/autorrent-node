@@ -1,7 +1,17 @@
+const api = require('./api')
 const config = require('../config/config')
 
 module.exports = {
-  index: function() {
-    return '<h1>Welcome to Autorrent</h1><br/><a href="/auth/tvst">Log in</a>'
+  index: function(response) {
+    if (api.token) {
+      api.getUser(function(err, response, body) {
+        console.log(body)
+      })
+    } else {
+        console.log("no token")
+    }
+    return response.render('index', {
+      name: 'Dany'
+    })
   },
 }
