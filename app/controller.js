@@ -2,10 +2,10 @@ const api = require('./api')
 const config = require('../config/config')
 
 module.exports = {
-  index: function(response) {
-    if (api.token) {
-      api.getUser(function(user) {
-        api.getWatchList(function(watchList) {
+  index: function(token, response) {
+    if (token) {
+      api.getUser(token, function(user) {
+        api.getWatchList(token, function(watchList) {
           return response.render('index', {
             user: user.user,
             episodes: watchList.episodes
