@@ -52,6 +52,12 @@ module.exports = {
       controller.index(token, res)
     })
 
+    app.get('/logout', (req, res) => {
+      console.log('/logout')
+      res.cookie('tvst_access_token', null, {maxAge: -1})
+      res.redirect('/')
+    })
+
     app.get('/auth/tvst', passport.authenticate('tvst'));
 
     app.get('/auth/tvst/callback', function(req, res, next) {
