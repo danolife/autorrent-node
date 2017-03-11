@@ -10,7 +10,6 @@
   "author": "Dany Badr <badr.dany@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "cookie-parser": "^1.4.3",
     "express": "^4.15.0",
     "express-handlebars": "^3.0.0",
     "passport": "^0.3.2",
