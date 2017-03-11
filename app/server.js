@@ -13,8 +13,10 @@ var OAuth2Strategy = require('passport-oauth2').Strategy
 
 module.exports = {
   init: function() {
+    // Cookies
     app.use(cookieParser())
 
+    // Templating
     app.engine('.hbs', exphbs({
       defaultLayout: 'layout',
       extname: '.hbs',
@@ -23,6 +25,7 @@ module.exports = {
     app.set('view engine', '.hbs')
     app.set('views', path.join(__dirname, '../views'))
 
+    // Authentification strategy
     passport.use('tvst', new OAuth2Strategy({
         authorizationURL: 'https://www.tvshowtime.com/oauth/authorize',
         tokenURL: 'https://api.tvshowtime.com/v1/oauth/access_token',
@@ -34,17 +37,6 @@ module.exports = {
         done(null, null, {'access_token': accessToken})
       }
     ));
-
-    app.use(function (req, res, next) {
-      // check if client sent cookie
-      var cookie = req.cookies.tvst_access_token;
-      if (cookie === undefined) {
-        console.log('no cookie')
-      } else {
-        console.log('cookie exists', cookie)
-      }
-      next()
-    })
 
     app.get('/', (req, res) => {
       console.log('/')
@@ -63,12 +55,10 @@ module.exports = {
     app.get('/auth/tvst/callback', function(req, res, next) {
       passport.authenticate('tvst', function(err, user, info) {
         if (err) { return next(err); }
-
         // set cookie
         if (info.access_token) {
           res.cookie('tvst_access_token', info.access_token, { maxAge: 900000 })
         }
-
         return res.redirect('/');
       })(req, res, next);
     });
