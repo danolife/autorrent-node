@@ -9,6 +9,9 @@ const api = require('./api')
 const config = require('../config/config')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
+// const { Website } = require('extratorrent-api')
+// const extra = new Website()
+const helper = require('./helper')
 var OAuth2Strategy = require('passport-oauth2').Strategy
 
 module.exports = {
@@ -40,6 +43,10 @@ module.exports = {
 
     app.get('/', (req, res) => {
       console.log('/')
+
+      // test slugify
+      console.log(helper.slugify('Scandal (2012) S06E03'))
+
       var token = req.cookies.tvst_access_token
       controller.index(token, res)
     })
