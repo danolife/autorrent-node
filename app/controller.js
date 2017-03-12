@@ -13,7 +13,13 @@ module.exports = {
             var episode = watchList.episodes[index]
             var qs = helper.getQS(episode)
             extra.search(qs)
-            .then(res => console.log(res))
+            .then(response => {
+              var res = response.results[0]
+              var name = res.title
+              var link = res.url
+              var size = res.size
+              console.log(name + ' ' + link + '(' + size + ')')
+            })
             .catch(err => console.error(err));
           }
 
