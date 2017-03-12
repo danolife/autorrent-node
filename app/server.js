@@ -9,8 +9,6 @@ const api = require('./api')
 const config = require('../config/config')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
-// const { Website } = require('extratorrent-api')
-// const extra = new Website()
 const helper = require('./helper')
 var OAuth2Strategy = require('passport-oauth2').Strategy
 
@@ -43,10 +41,6 @@ module.exports = {
 
     app.get('/', (req, res) => {
       console.log('/')
-
-      // test slugify
-      console.log(helper.slugify('Scandal (2012) S06E03'))
-
       var token = req.cookies.tvst_access_token
       controller.index(token, res)
     })
@@ -64,7 +58,7 @@ module.exports = {
         if (err) { return next(err); }
         // set cookie
         if (info.access_token) {
-          res.cookie('tvst_access_token', info.access_token, { maxAge: 900000 })
+          res.cookie('tvst_access_token', info.access_token, { maxAge: 31557600 })
         }
         return res.redirect('/');
       })(req, res, next);
