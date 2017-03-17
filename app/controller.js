@@ -5,30 +5,53 @@ const extra = new Website()
 const helper = require('./helper')
 
 module.exports = {
-  index: function(token, response) {
+  index: function(token, httpResponse) {
     if (token) {
       api.getUser(token, function(user) {
+
         api.getWatchList(token, function(watchList) {
-          for(var index in watchList.episodes){
+
+          var count = watchList.episodes.length
+
+          for(var index in watchList.episodes) {
+
             var episode = watchList.episodes[index]
             var qs = helper.getQS(episode)
+
+console.log('')
+console.log('avant')
+console.log(watchList.episodes[index])
+
             extra.search(qs)
             .then(response => {
-              var res = response.results[0]
-              var name = res.title
-              var link = res.url
-              var size = res.size
-              console.log(name + ' ' + link + '(' + size + ')')
+              var res = helper.getFirstResultBySeedDesc(response.results)
+              watchList.episodes[index].extraResult = {
+                'name': res.title,
+                'link': res.torrent_link,
+                'size': res.size
+              }
+              console.log('')
+              console.log('apres')
+              console.log(watchList.episodes[index])
+
+              // console.log(episode)
+
+              count--
+
+              if (count == 0) {
+                console.log('///////////////////////////////////////////////////////////////////////////////////////////////////////')
+                console.log(watchList.episodes)
+                return httpResponse.render('index', {
+                  user: user.user,
+                  episodes: watchList.episodes
+                })
+              }
+
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+              console.error(err)
+            });
           }
-
-
-
-          return response.render('index', {
-            user: user.user,
-            episodes: watchList.episodes
-          })
         })
       })
     } else {

@@ -8,6 +8,14 @@
 
 <ul>
   {{#each episodes}}
-    <li>{{show.name}} S{{season_number}}E{{number}}: {{name}}</li>
+    <li>
+      {{show.name}} S{{season_number}}E{{number}}: {{name}}
+      /
+      {{#if extraResult}}
+        <a href="{{extraResult.link}}">{{extraResult.name}}</a> ({{extraResult.size}})
+      {{else}}
+        No torrent available
+      {{/if}}
+    </li>
   {{/each}}
 </ul>

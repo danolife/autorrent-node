@@ -56,5 +56,12 @@ module.exports = {
         })
       }
     });
+  },
+  getFirstResultBySeedDesc: function(results) {
+    results.sort(function(a,b) {
+      return b.seeds - a.seeds;
+    })
+    // console.log(results[0])
+    return results[0]
   }
 }
