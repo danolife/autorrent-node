@@ -11,51 +11,58 @@ module.exports = {
 
         api.getWatchList(token, function(watchList) {
 
-          var count = watchList.episodes.length
+          helper.searchAll(watchList.episodes)
+          // var episodes = []
+          // var count = watchList.episodes.length
 
-          for(var index in watchList.episodes) {
-
-            var episode = watchList.episodes[index]
-            var qs = helper.getQS(episode)
-
-console.log('')
-console.log('avant')
-console.log(watchList.episodes[index])
-
-            extra.search(qs)
-            .then(response => {
-              var res = helper.getFirstResultBySeedDesc(response.results)
-              watchList.episodes[index].extraResult = {
-                'name': res.title,
-                'link': res.torrent_link,
-                'size': res.size
-              }
-              console.log('')
-              console.log('apres')
-              console.log(watchList.episodes[index])
-
-              // console.log(episode)
-
-              count--
-
-              if (count == 0) {
-                console.log('///////////////////////////////////////////////////////////////////////////////////////////////////////')
-                console.log(watchList.episodes)
-                return httpResponse.render('index', {
-                  user: user.user,
-                  episodes: watchList.episodes
-                })
-              }
-
-            })
-            .catch(err => {
-              console.error(err)
-            });
-          }
+          // for(var index in watchList.episodes) {
+          //   console.log('index: '+index)
+          //   var episode = watchList.episodes[index]
+          //   var qs = helper.getQS(episode)
+          //
+          //   extra.search(qs)
+          //   .then(response => {
+          //     console.log('then')
+          //     var res = helper.getFirstResultBySeedDesc(response.results)
+          //     console.log('index: '+index)
+          //     if (res) {
+          //       episodes[index] = {
+          //         episodeData: episode,
+          //         extraResult: {
+          //           'name': res.title,
+          //           'link': res.torrent_link,
+          //           'size': res.size
+          //         }
+          //       }
+          //     } else {
+          //       episodes[index] = {
+          //         episodeData: episode
+          //       }
+          //     }
+          //
+          //     // console.log(episode)
+          //
+          //     count--
+          //
+          //     if (count == 0) {
+          //       console.log('///////////////////////////////////////////////////////////////////////////////////////////////////////')
+          //       console.log(episodes)
+          //       return httpResponse.render('index', {
+          //         user: user.user,
+          //         episodes: episodes
+          //       })
+          //     }
+          //
+          //   })
+          //   .catch(err => {
+          //     console.log('err')
+          //     console.error(err)
+          //   });
+          // }
         })
       })
     } else {
-      return response.render('index', {
+      return httpResponse.render('index', {
         user: undefined
       })
     }

@@ -1,5 +1,7 @@
 const cheerio = require('cheerio')
 const request = require('request')
+const { Website } = require('extratorrent-api')
+const extra = new Website()
 
 module.exports = {
   slugify: function(str) {
@@ -44,24 +46,53 @@ module.exports = {
 
     return qs
   },
-  search: function(str) {
-    var base_url = 'http://extratorrent.cc/'
-    var qs = 'search/?search=' + str
-    request(base_url + qs, function (error, response, html) {
-      if (!error && response.statusCode == 200) {
-        console.log(html)
-        var $ = cheerio.load(html)
-        $('#e_content table.tl tbody').find('tr').each(function(index, element) {
-          console.log($(element).find('td').eq(2).find('a').text())
-        })
+  searchAll: function(watchList) {
+    var max = watchList.length
+    console.log('max '+max)
+    var count = 0
+    var episode = watchList[count]
+    var episodes = []
+    var thenFunction = function(response) {
+      var res = module.exports.getFirstResultBySeedDesc(response.results)
+      if (res) {
+        episodes[count] = {
+          episodeData: watchList[count],
+          extraResult: {
+            'name': res.title,
+            'link': res.torrent_link,
+            'size': res.size
+          }
+        }
+      } else {
+        episodes[count] = {
+          episodeData: episode
+        }
       }
-    });
+      console.log('count '+count+' is done')
+      count++
+      // Next call
+      if (count < max) {
+        module.exports.searchOne(watchList[count], count, max, thenFunction)
+      } else {
+        console.log(episodes)
+      }
+    }
+    // First call
+    this.searchOne(watchList[count], count, max, thenFunction)
+
+  },
+  searchOne: function(episode, count, max, then) {
+    var qs = this.getQS(episode)
+    extra.search(qs)
+    .then(response => {then(response)})
+    .catch(err => {
+      console.log(err)
+    })
   },
   getFirstResultBySeedDesc: function(results) {
     results.sort(function(a,b) {
       return b.seeds - a.seeds;
     })
-    // console.log(results[0])
     return results[0]
   }
 }
