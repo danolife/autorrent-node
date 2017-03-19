@@ -47,51 +47,46 @@ module.exports = {
     return qs
   },
   searchAll: function(watchList, cb) {
-    var max = watchList.length
-    console.log('max '+max)
-    var count = 0
+    var loaded = 0
     var episodes = []
-    var thenFunction = function(response) {
-      var res = module.exports.getFirstResultBySeedDesc(response.results)
-      if (res) {
-        episodes[count] = {
-          episodeData: watchList[count],
-          extraResult: {
-            'name': res.title,
-            'link': res.torrent_link,
-            'size': res.size
+    for (var index in watchList) {
+      if (watchList.hasOwnProperty(index)) {
+        // copy index in local variable
+        let currentIndex = index
+        let episode = watchList[index]
+        let qs = this.getQS(episode)
+        extra.search(qs)
+        .then(response => {
+          var res = module.exports.getFirstResultBySeedDesc(response.results)
+          if (res) {
+            episodes[currentIndex] = {
+              episodeData: episode,
+              extraResult: {
+                'name': res.title,
+                'link': res.torrent_link,
+                'size': res.size
+              }
+            }
+          } else {
+            episodes[currentIndex] = {
+              episodeData: episode
+            }
           }
-        }
-      } else {
-        episodes[count] = {
-          episodeData: watchList[count]
-        }
-      }
-      console.log('count '+count+' is done / '+watchList[count].show.name)
-      count++
-      // Next call
-      if (count < max) {
-        module.exports.searchOne(watchList[count], count, max, thenFunction)
-      } else {
-        // console.log(episodes)
-        if (cb && typeof cb == "function") {
-          console.log(episodes[0])
-          console.log(episodes[max-1])
-          cb(episodes)
-        }
+          // one more episode is ready
+          loaded++
+
+          // check if this was the last item
+          if (watchList.length == loaded) {
+            if (cb && typeof cb == "function") {
+              cb(episodes)
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     }
-    // First call
-    this.searchOne(watchList[count], count, max, thenFunction)
-
-  },
-  searchOne: function(episode, count, max, then) {
-    var qs = this.getQS(episode)
-    extra.search(qs)
-    .then(response => {then(response)})
-    .catch(err => {
-      console.log(err)
-    })
   },
   getFirstResultBySeedDesc: function(results) {
     results.sort(function(a,b) {
