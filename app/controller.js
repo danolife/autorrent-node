@@ -10,8 +10,14 @@ module.exports = {
       api.getUser(token, function(user) {
 
         api.getWatchList(token, function(watchList) {
+          
+          var episodes = helper.searchAll(watchList.episodes, function(episodes) {
+            return httpResponse.render('index', {
+              user: user.user,
+              episodes: episodes
+            })
+          })
 
-          helper.searchAll(watchList.episodes)
           // var episodes = []
           // var count = watchList.episodes.length
 

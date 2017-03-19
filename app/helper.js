@@ -46,11 +46,10 @@ module.exports = {
 
     return qs
   },
-  searchAll: function(watchList) {
+  searchAll: function(watchList, cb) {
     var max = watchList.length
     console.log('max '+max)
     var count = 0
-    var episode = watchList[count]
     var episodes = []
     var thenFunction = function(response) {
       var res = module.exports.getFirstResultBySeedDesc(response.results)
@@ -65,16 +64,21 @@ module.exports = {
         }
       } else {
         episodes[count] = {
-          episodeData: episode
+          episodeData: watchList[count]
         }
       }
-      console.log('count '+count+' is done')
+      console.log('count '+count+' is done / '+watchList[count].show.name)
       count++
       // Next call
       if (count < max) {
         module.exports.searchOne(watchList[count], count, max, thenFunction)
       } else {
-        console.log(episodes)
+        // console.log(episodes)
+        if (cb && typeof cb == "function") {
+          console.log(episodes[0])
+          console.log(episodes[max-1])
+          cb(episodes)
+        }
       }
     }
     // First call
@@ -83,6 +87,7 @@ module.exports = {
   },
   searchOne: function(episode, count, max, then) {
     var qs = this.getQS(episode)
+    console.log(qs)
     extra.search(qs)
     .then(response => {then(response)})
     .catch(err => {

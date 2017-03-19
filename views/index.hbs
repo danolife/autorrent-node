@@ -7,15 +7,15 @@
 {{/if}}
 
 <ul>
-  <!-- {{#each episodes}}
+  {{#each episodes}}
     <li>
-      {{show.name}} S{{season_number}}E{{number}}: {{name}}
+      {{episodeData.show.name}} S{{episodeData.season_number}}E{{episodeData.number}}: {{episodeData.name}}
       /
       {{#if extraResult}}
         <a href="{{extraResult.link}}">{{extraResult.name}}</a> ({{extraResult.size}})
       {{else}}
-        No torrent available
+        No torrents
       {{/if}}
     </li>
-  {{/each}} -->
+  {{/each}}
 </ul>
