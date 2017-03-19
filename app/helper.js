@@ -87,7 +87,6 @@ module.exports = {
   },
   searchOne: function(episode, count, max, then) {
     var qs = this.getQS(episode)
-    console.log(qs)
     extra.search(qs)
     .then(response => {then(response)})
     .catch(err => {
