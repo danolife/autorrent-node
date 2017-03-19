@@ -9,6 +9,7 @@ const api = require('./api')
 const config = require('../config/config')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
+const helper = require('./helper')
 var OAuth2Strategy = require('passport-oauth2').Strategy
 
 module.exports = {
@@ -24,6 +25,7 @@ module.exports = {
     }))
     app.set('view engine', '.hbs')
     app.set('views', path.join(__dirname, '../views'))
+    app.use(express.static(path.join(__dirname, '/views/css')));
 
     // Authentification strategy
     passport.use('tvst', new OAuth2Strategy({
@@ -57,7 +59,7 @@ module.exports = {
         if (err) { return next(err); }
         // set cookie
         if (info.access_token) {
-          res.cookie('tvst_access_token', info.access_token, { maxAge: 900000 })
+          res.cookie('tvst_access_token', info.access_token, { maxAge: 31557600 })
         }
         return res.redirect('/');
       })(req, res, next);

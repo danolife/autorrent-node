@@ -1,13 +1,47 @@
-<h1>Welcome to Autorrent</h1>
-{{#if user}}
-  Welcome {{user.name}}
-  <a href="/logout">Logout</a>
-{{else}}
-  <a href="/auth/tvst">Log in</a>
-{{/if}}
+<div class="text-right">
+  {{#if user}}
+    {{user.name}}
+    <a href="/logout">
+      <i class="fa fa-sign-out" aria-hidden="true"></i>
+    </a>
+  {{else}}
+    <a href="/auth/tvst">Log in</a>
+  {{/if}}
+</div>
 
-<ul>
+<h1 class="text-center">Autorrent</h1>
+
+<div class="row">
   {{#each episodes}}
-    <li>{{show.name}} S{{season_number}}E{{number}}: {{name}}</li>
+    <div class="col-md-6">
+      <div class="card margin-bottom-20">
+        <div class="card-block">
+          <h4 class="card-title">{{episodeData.show.name}}</h4>
+          <h6 class="card-subtitle mb-2 text-muted">S{{episodeData.season_number}}E{{episodeData.number}} / {{episodeData.name}}</h6>
+          <p class="card-text">{{extraResult.name}}</p>
+          {{#if extraResult}}
+            <a href="{{extraResult.link}}" class="card-link btn btn-sm btn-primary pull-right">
+              <i class="fa fa-cloud-download" aria-hidden="true"></i>
+            </a>
+          {{else}}
+            No torrents
+          {{/if}}
+        </div>
+      </div>
+    </div>
   {{/each}}
-</ul>
+</div>
+
+<!-- <ul>
+  {{#each episodes}}
+    <li>
+      {{episodeData.show.name}} S{{episodeData.season_number}}E{{episodeData.number}}: {{episodeData.name}}
+      /
+      {{#if extraResult}}
+        <a href="{{extraResult.link}}">{{extraResult.name}}</a> ({{extraResult.size}})
+      {{else}}
+        No torrents
+      {{/if}}
+    </li>
+  {{/each}}
+</ul> -->
