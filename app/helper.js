@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const request = require('request')
 const { Website } = require('extratorrent-api')
 const extra = new Website()
+var _ = require('lodash');
 
 module.exports = {
   slugify: function(str) {
@@ -30,6 +31,8 @@ module.exports = {
     str = str.replace(/\s\s+/g, ' ');
     // Replace slashes with +
     str = str.replace(new RegExp('/', 'g'), '+');
+    // Remove simple quotes
+    str = str.replace(new RegExp("'", 'g'), '');
     // Trim
     str = str.replace(/\s$/g, '');
     // Replace spaces with +
@@ -49,16 +52,16 @@ module.exports = {
   searchAll: function(watchList, cb) {
     var loaded = 0
     var episodes = []
-    for (var index in watchList) {
-      if (watchList.hasOwnProperty(index)) {
-        // copy index in local variable
-        let currentIndex = index
-        let episode = watchList[index]
-        let qs = this.getQS(episode)
+    _.forEach(watchList, function(episode, index) {
+      if (index == 0) {
+
+        let qs = module.exports.getQS(episode)
+        console.log(index + ' ' + qs);
         extra.search(qs)
         .then(response => {
           var res = module.exports.getFirstResultBySeedDesc(response.results)
           if (res) {
+            console.log('-> ' + index)
             episodes[currentIndex] = {
               episodeData: episode,
               extraResult: {
@@ -81,12 +84,22 @@ module.exports = {
               cb(episodes)
             }
           }
-        })
+        }) // then
         .catch(err => {
           console.log(err)
-        })
+        }) // catch
       }
-    }
+    }) // foreach
+
+    // for (var index in watchList) {
+    //   if (watchList.hasOwnProperty(index)) {
+    //     // copy index in local variable
+    //     let currentIndex = index
+    //     let episode = watchList[index]
+    //     let qs = this.getQS(episode)
+    //
+    //   }
+    // }
   },
   getFirstResultBySeedDesc: function(results) {
     results.sort(function(a,b) {
